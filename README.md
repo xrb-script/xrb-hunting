@@ -1,3 +1,5 @@
+Preview : https://youtu.be/O0O9BtxZ7fo?si=mPKYZbS5PxI2bpov
+
 *   **Animal Skinning:** Allows players to skin specific dead animals found in the game world using `ox_target`.
 *   **Loot System:** Rewards players with configurable amounts of meat and a chance-based skin drop upon successful skinning, managed via `ox_inventory`.
 *   **Required Tool:** Skinning action requires the player to possess a specific, configurable item (e.g., `skining_knife`) in their inventory.
