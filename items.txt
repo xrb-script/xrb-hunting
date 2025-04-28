@@ -1,0 +1,75 @@
+    ['skining_knife'] = {
+        label = 'Skining Knife',
+        weight = 200,
+        stack = true,
+    },
+    ['boar_meat'] = {
+        label = 'Boar Meat',
+        weight = 500,
+        stack = true,
+    },
+    ['boar_skin'] = {
+        label = 'Boar Skin',
+        weight = 700,
+        stack = true,
+    },
+    ['deer_meat'] = {
+        label = 'Deer Meat',
+        weight = 600,
+        stack = true,
+    },
+    ['deer_skin'] = {
+        label = 'Deer Skin',
+        weight = 800,
+        stack = true,
+    },
+    ['coyote_meat'] = {
+        label = 'Coyote Meat',
+        weight = 400,
+        stack = true,
+    },
+    ['coyote_skin'] = {
+        label = 'Coyote Skin',
+        weight = 600,
+        stack = true,
+    },
+    ['rabbit_meat'] = {
+        label = 'Rabbit Meat',
+        weight = 300,
+        stack = true,
+    },
+    ['rabbit_skin'] = {
+        label = 'Rabbit Skin',
+        weight = 400,
+        stack = true,
+    },
+    ['cow_meat'] = {
+        label = 'Cow Meat',
+        weight = 1000,
+        stack = true,
+    },
+    ['cow_skin'] = {
+        label = 'Cow Skin',
+        weight = 1200,
+        stack = true,
+    },
+    ['chicken_meat'] = {
+        label = 'Chicken Meat',
+        weight = 1000,
+        stack = true,
+    },
+    ['chicken_skin'] = {
+	   label = 'Chicken Skin',
+	   weight = 100,
+	   stack = true,
+    },
+	['pig_meat'] = {
+        label = 'Pig Meat',
+        weight = 500,
+        stack = true,
+    },
+	['pig_skin'] = {
+        label = 'Pig Skin',
+        weight = 300,
+        stack = true,
+    },
