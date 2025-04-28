@@ -4,14 +4,12 @@ lua54 'yes'
 
 author 'xResuL Albania'
 description 'Skining Script by xResuL Albania for qbcore and esx'
-version '1.1.0'
+version '1.2.0'
 
 dependencies {
     'ox_lib',
     'ox_target',
     'ox_inventory',
-    'es_extended',  -- opsionale
-    --'qb-core'       -- opsionale
 }
 
 shared_scripts {
