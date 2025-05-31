@@ -1,10 +1,10 @@
 local ESX = nil
 local QBCore = nil
-local PlayerData = {} -- Store player data if needed (like job for QBCore)
+local PlayerData = {}
 
--- Attempt to get framework object based on Config setting
+
 CreateThread(function()
-    Wait(500) -- Give framework time to load after resource start
+    Wait(500)
     if Config.Framework == 'esx' then
         local esxExport = exports.es_extended
         if esxExport then
@@ -44,25 +44,24 @@ end)
 local ox_inventory = exports.ox_inventory
 local ox_target = exports.ox_target
 
--- Funksioni i njoftimeve (Updated)
+
 local function Notify(msg, type)
-    local notificationType = type or 'inform' -- Default type for QBCore/ox_lib
-    local isError = (type == 'error') -- Helper for ox_lib
+    local notificationType = type or 'inform'
+    local isError = (type == 'error')
 
     if Config.Framework == 'esx' and ESX then
-        ESX.ShowNotification(msg) -- ESX notification type is usually inferred or simpler
+        ESX.ShowNotification(msg) 
     elseif Config.Framework == 'qbcore' and QBCore then
-        QBCore.Functions.Notify(msg, notificationType) -- Use QBCore's preferred function
+        QBCore.Functions.Notify(msg, notificationType) 
     else
-        -- Përdor ox_lib si fallback or if no framework selected/found
         lib.notify({ description = msg, type = isError and 'error' or 'success' })
     end
 end
 
 
--- Funksioni kryesor për skinning
+
 local function skinAnimal(entity)
-    local playerPed = PlayerPedId() -- Get player ped inside function
+    local playerPed = PlayerPedId()
 
     if not DoesEntityExist(entity) then return Notify('The animal does not exist.', 'error') end
 
@@ -71,28 +70,23 @@ local function skinAnimal(entity)
     end
 
     local animalModelHash = GetEntityModel(entity)
-    -- Use the new config function to get data
     local animalData = Config.GetAnimalDataByHash(animalModelHash)
 
     if not animalData then return Notify('This animal cannot be skinned.', 'error') end
 
-    -- Kontrollo nëse ka thikë
-    if ox_inventory:Search('count', 'skining_knife') < 1 then
-        return Notify('I need a skinning knife!', 'error') -- Corrected typo
-    end
 
-    -- Kontrollo kapacitetin e inventarit (në server)
-    -- Pass animalData directly, server doesn't need the hash again
+    if ox_inventory:Search('count', 'skining_knife') < 1 then
+        return Notify('I need a skinning knife!', 'error')
+    end
+n
     lib.callback('hunting:checkInventorySpace', false, function(canCarry)
         if not canCarry then return Notify('You have no space in your inventory.', 'error') end
-
-        -- Nis skinning
         local success = lib.progressBar({
             duration = 5000,
             label = 'Skining...',
             useWhileDead = false,
             canCancel = true,
-            disable = { move = true, car = true, combat = true }, -- Disable car movement too
+            disable = { move = true, car = true, combat = true },
             anim = { dict = 'amb@world_human_gardener_plant@male@base', clip = 'base', flag = 1 }
         })
 
@@ -101,24 +95,21 @@ local function skinAnimal(entity)
             return Notify('Skinning was stopped', 'error')
         end
 
-        -- Nëse kalon të gjitha kontrollet
-        -- Send the specific animal data found in config
         TriggerServerEvent('hunting:skinAnimal', animalData)
-        DeleteEntity(entity) -- Delete after successful skinning trigger
+        DeleteEntity(entity)
     end, animalData)
 end
 
--- Shto targetet për kafshët
+
 CreateThread(function()
-    Wait(1000) -- Wait for config and framework init
+    Wait(1000)
     for hash, data in pairs(Config.Animals) do
-        ox_target:addModel(data.modelHash, { -- Use the explicit modelHash from config
-            label = 'Skin ' .. (data.name or 'Animal'), -- Use name from config if available
-            icon = 'fa-solid fa-bone', -- Updated icon
+        ox_target:addModel(data.modelHash, { 
+            label = 'Skin ' .. (data.name or 'Animal'),
+            icon = 'fa-solid fa-bone',
             distance = 2.0,
             canInteract = function(entity, distance, coords, name, bone)
-                -- Add extra checks if needed, e.g., check if animal is dead
-                return IsEntityDead(entity) -- Only allow skinning dead animals
+                return IsEntityDead(entity)
             end,
             onSelect = function(data)
                 skinAnimal(data.entity)
@@ -128,33 +119,33 @@ CreateThread(function()
     print("[xrb-Hunting] Animal targets added.")
 end)
 
--- Krijo ped për shitje
+
 CreateThread(function()
     local pedInfo = Config.SellPed
     RequestModel(pedInfo.model)
     while not HasModelLoaded(pedInfo.model) do Wait(10) end
 
-    local sellPed = CreatePed(4, pedInfo.model, pedInfo.coords.xyz, pedInfo.coords.w, false, true) -- Use true for network sync
+    local sellPed = CreatePed(4, pedInfo.model, pedInfo.coords.xyz, pedInfo.coords.w, false, true)
     FreezeEntityPosition(sellPed, true)
     SetEntityInvincible(sellPed, true)
     SetBlockingOfNonTemporaryEvents(sellPed, true)
-    SetEntityAsMissionEntity(sellPed, true, true) -- Keep ped from despawning
+    SetEntityAsMissionEntity(sellPed, true, true)
 
     -- Blip
     local blip = AddBlipForCoord(pedInfo.coords.xyz)
-    SetBlipSprite(blip, 141) -- Consider a more fitting sprite like 355 (Butcher) or 566 (Shop)
-    SetBlipColour(blip, 2)   -- Red
+    SetBlipSprite(blip, 141)
+    SetBlipColour(blip, 2)   
     SetBlipScale(blip, 0.8)
     SetBlipAsShortRange(blip, true)
     BeginTextCommandSetBlipName('STRING')
     AddTextComponentString('Meat Seller')
     EndTextCommandSetBlipName(blip)
 
-    -- Target për shitje
+
     ox_target:addLocalEntity(sellPed, {
-        label = 'Sell Products', -- Corrected label
+        label = 'Sell Products',
         icon = 'fa-dollar-sign',
-        distance = 2.5, -- Slightly larger distance for NPCs
+        distance = 2.5,
         onSelect = function()
             TriggerServerEvent('hunting:sellProducts')
         end
@@ -162,11 +153,8 @@ CreateThread(function()
      print("[xrb-Hunting] Sell Ped created.")
 end)
 
--- Cleanup on resource stop (optional but good practice)
 AddEventHandler('onResourceStop', function(resourceName)
     if GetCurrentResourceName() == resourceName then
-        -- Remove targets and peds if necessary (more complex to track all peds/targets)
-        -- For simplicity, we'll assume server restart handles cleanup
         print("[xrb-Hunting] Resource stopping.")
     end
 end)
