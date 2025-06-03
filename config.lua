@@ -86,7 +86,7 @@ Config.Prices = {
 -- Ped for selling products
 Config.SellPed = {
     model = 'csb_chef',
-    coords = vector4(224.72, -441.26, 45.25, 151.32)
+    coords = vector4(224.72, -441.26, 44.25, 150.32)
 }
 
 -- Utility function to get animal data by hash (used internally)
