@@ -78,7 +78,6 @@ local function skinAnimal(entity)
     if ox_inventory:Search('count', 'skining_knife') < 1 then
         return Notify('I need a skinning knife!', 'error')
     end
-n
     lib.callback('hunting:checkInventorySpace', false, function(canCarry)
         if not canCarry then return Notify('You have no space in your inventory.', 'error') end
         local success = lib.progressBar({
