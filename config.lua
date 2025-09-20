@@ -2,12 +2,53 @@ Config = {}
 
 -- xResul Albania Hunting Script
 
-Config.Framework = 'esx' -- Change to 'qbcore' if you use QBCore
+Config.Framework = 'qbcore' -- Change to 'qbcore' if you use QBCore
+Config.HuntingWeaponNotify = 'You need a hunting rifle to hunt here!' -- Message when trying to hunt with wrong weapon
+Config.UseSpecificHuntingZones = true -- Set to true to enable specific hunting zones, false for entire map
+Config.HuntingZones = {
+    {
+        name = 'Great Chaparral Hunting Grounds',
+        coords = vector3(2500.0, 3300.0, 40.0), -- Central point for the blip
+        radius = 500.0, -- Radius of the zone
+        blip = {
+            sprite = 119, -- icon
+            color = 3, -- color
+            scale = 0.8,
+            shortRange = true,
+            label = 'Hunting Zone: Great Chaparral'
+        }
+    },
+    {
+        name = 'Paleto Forest Hunting Area',
+        coords = vector3(-300.0, 5800.0, 40.0),
+        radius = 700.0,
+        blip = {
+            sprite = 119,
+            color = 11,
+            scale = 0.8,
+            shortRange = true,
+            label = 'Hunting Zone: Paleto Forest'
+        }
+    },
+    {
+        name = 'Mount Josiah Foothills',
+        coords = vector3(-1500.0, 4400.0, 50.0),
+        radius = 400.0,
+        blip = {
+            sprite = 119,
+            color = 46,
+            scale = 0.8,
+            shortRange = true,
+            label = 'Hunting Zone: Mount Josiah'
+        }
+    }
+    -- Add more hunting zones as needed
+}
 
 -- List of animals and possibilities for meat and skin
 Config.Animals = {
     [-832573324] = { -- Boar
-        name = 'Boar', -- Added for potential future use/logging
+        name = 'Boar',
         modelHash = -832573324,
         meat = 'boar_meat',
         skin = 'boar_skin',
@@ -89,7 +130,6 @@ Config.SellPed = {
     coords = vector4(224.72, -441.26, 44.25, 150.32)
 }
 
--- Utility function to get animal data by hash (used internally)
 function Config.GetAnimalDataByHash(hash)
     for _, data in pairs(Config.Animals) do
         if data.modelHash == hash then
@@ -97,4 +137,19 @@ function Config.GetAnimalDataByHash(hash)
         end
     end
     return nil 
+end
+
+function Config.IsPlayerInHuntingZone()
+    if not Config.UseSpecificHuntingZones then
+        return true
+    end
+
+    local playerCoords = GetEntityCoords(PlayerPedId())
+    for _, zone in pairs(Config.HuntingZones) do
+        local dist = GetDistanceBetweenCoords(playerCoords, zone.coords, true)
+        if dist <= zone.radius then
+            return true
+        end
+    end
+    return false
 end
