@@ -3,7 +3,6 @@ Config = {}
 -- xResul Albania Hunting Script
 
 Config.Framework = 'qbcore' -- Change to 'qbcore' if you use QBCore
-Config.HuntingWeaponNotify = 'You need a hunting rifle to hunt here!' -- Message when trying to hunt with wrong weapon
 Config.UseSpecificHuntingZones = true -- Set to true to enable specific hunting zones, false for entire map
 Config.HuntingZones = {
     {
@@ -153,3 +152,4 @@ function Config.IsPlayerInHuntingZone()
     end
     return false
 end
+
