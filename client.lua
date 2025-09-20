@@ -32,6 +32,8 @@ end)
 local ox_inventory = exports.ox_inventory
 local ox_target = exports.ox_target
 
+local huntingZoneBlips = {}
+
 local function Notify(msg, type)
     local notificationType = type or 'inform'
     local isError = (type == 'error')
@@ -44,11 +46,42 @@ local function Notify(msg, type)
     end
 end
 
+local function CreateHuntingZoneBlips()
+    if Config.UseSpecificHuntingZones and next(Config.HuntingZones) ~= nil then
+        for i, zone in pairs(Config.HuntingZones) do
+            local blip = AddBlipForCoord(zone.coords.x, zone.coords.y, zone.coords.z)
+            SetBlipSprite(blip, zone.blip.sprite)
+            SetBlipColour(blip, zone.blip.color)
+            SetBlipScale(blip, zone.blip.scale)
+            SetBlipAsShortRange(blip, zone.blip.shortRange)
+            BeginTextCommandSetBlipName('STRING')
+            AddTextComponentString(zone.blip.label)
+            EndTextCommandSetBlipName(blip)
+            table.insert(huntingZoneBlips, blip)
+        end
+        print("[xrb-Hunting] Hunting zone blips created.")
+    else
+        print("[xrb-Hunting] Specific hunting zones are disabled or not configured. No blips created.")
+    end
+end
+
+local function RemoveHuntingZoneBlips()
+    for _, blip in ipairs(huntingZoneBlips) do
+        RemoveBlip(blip)
+    end
+    huntingZoneBlips = {}
+    print("[xrb-Hunting] Hunting zone blips removed.")
+end
+
 local function skinAnimal(entity)
     local playerPed = PlayerPedId()
     if not DoesEntityExist(entity) then return Notify('The animal does not exist.', 'error') end
     if IsPedInAnyVehicle(playerPed, false) then
         return Notify('You cant get out of the car!', 'error')
+    end
+
+    if not Config.IsPlayerInHuntingZone() then
+        return Notify('You can only skin animals in designated hunting zones!', 'error')
     end
 
     local animalModelHash = GetEntityModel(entity)
@@ -82,12 +115,19 @@ end
 
 CreateThread(function()
     Wait(1000)
+    CreateHuntingZoneBlips()
+
     for hash, data in pairs(Config.Animals) do
         ox_target:addModel(data.modelHash, { 
             label = 'Skin ' .. (data.name or 'Animal'),
             icon = 'fa-solid fa-bone',
             distance = 2.0,
-            canInteract = function(entity) return IsEntityDead(entity) end,
+            canInteract = function(entity) 
+                if Config.UseSpecificHuntingZones and not Config.IsPlayerInHuntingZone() then
+                    return false
+                end
+                return IsEntityDead(entity) 
+            end,
             onSelect = function(data) skinAnimal(data.entity) end
         })
     end
@@ -128,6 +168,7 @@ end)
 
 AddEventHandler('onResourceStop', function(resourceName)
     if GetCurrentResourceName() == resourceName then
+        RemoveHuntingZoneBlips()
         print("[xrb-Hunting] Resource stopping.")
     end
 end)
