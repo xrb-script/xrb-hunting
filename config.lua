@@ -3,18 +3,31 @@ Config = {}
 -- xResul Albania Hunting Script
 
 Config.Framework = 'qbcore' -- Change to 'qbcore' if you use QBCore
+
+-- NEW: Animal Spawning Configuration
+Config.EnableAnimalSpawning = true -- Set to true to enable custom animal spawning in hunting zones
+Config.MaxAnimalsPerZone = 10     -- Maximum number of custom-spawned animals per hunting zone
+Config.SpawnCheckInterval = 10000 -- How often (in ms) to check for animal spawning (e.g., 10 seconds)
+Config.SpawnRadiusFromPlayer = 100.0 -- Animals will spawn within this radius from the player
+Config.DespawnRadiusFromPlayer = 150.0 -- Animals will despawn if player is further than this radius (optimization)
 Config.UseSpecificHuntingZones = true -- Set to true to enable specific hunting zones, false for entire map
 Config.HuntingZones = {
     {
         name = 'Great Chaparral Hunting Grounds',
-        coords = vector3(2500.0, 3300.0, 40.0), -- Central point for the blip
-        radius = 500.0, -- Radius of the zone
+        coords = vector3(2493.56, 3281.8, 52.95), -- Central point for the blip
+        radius = 50.0, -- Radius of the zone
         blip = {
-            sprite = 119, -- icon
-            color = 3, -- color
+            sprite = 496,
+            color = 3,
             scale = 0.8,
             shortRange = true,
             label = 'Hunting Zone: Great Chaparral'
+        },
+        spawnChances = {
+            { animal = -832573324, chance = 40 }, -- Boar
+            { animal = -664053099, chance = 50 }, -- Deer
+            { animal = 1682622302, chance = 10 }, -- Coyote
+            -- Other animals will not spawn in this zone if not listed
         }
     },
     {
@@ -22,11 +35,16 @@ Config.HuntingZones = {
         coords = vector3(-300.0, 5800.0, 40.0),
         radius = 700.0,
         blip = {
-            sprite = 119,
-            color = 11,
+            sprite = 496,
+            color = 3,
             scale = 0.8,
             shortRange = true,
             label = 'Hunting Zone: Paleto Forest'
+        },
+        spawnChances = {
+            { animal = -664053099, chance = 60 }, -- Deer
+            { animal = -832573324, chance = 20 }, -- Boar
+            { animal = -541762431, chance = 20 }, -- Rabbit
         }
     },
     {
@@ -34,11 +52,15 @@ Config.HuntingZones = {
         coords = vector3(-1500.0, 4400.0, 50.0),
         radius = 400.0,
         blip = {
-            sprite = 119,
-            color = 46,
+            sprite = 496,
+            color = 3,
             scale = 0.8,
             shortRange = true,
             label = 'Hunting Zone: Mount Josiah'
+        },
+        spawnChances = {
+            { animal = 1682622302, chance = 50 }, -- Coyote
+            { animal = -541762431, chance = 50 }, -- Rabbit
         }
     }
     -- Add more hunting zones as needed
@@ -138,18 +160,17 @@ function Config.GetAnimalDataByHash(hash)
     return nil 
 end
 
-function Config.IsPlayerInHuntingZone()
+function Config.GetPlayerHuntingZone()
     if not Config.UseSpecificHuntingZones then
-        return true
+        return nil
     end
 
     local playerCoords = GetEntityCoords(PlayerPedId())
-    for _, zone in pairs(Config.HuntingZones) do
+    for i, zone in pairs(Config.HuntingZones) do
         local dist = GetDistanceBetweenCoords(playerCoords, zone.coords, true)
         if dist <= zone.radius then
-            return true
+            return zone, i
         end
     end
-    return false
+    return nil
 end
-
