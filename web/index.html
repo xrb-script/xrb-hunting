@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>xrb-Hunting Talent Tree</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="app" class="hidden">
+      <div class="backdrop" data-action="close"></div>
+
+      <div class="panel" role="dialog" aria-modal="true" aria-label="Hunting">
+        <div class="topbar">
+          <div class="title">
+            <div class="headline">xrb-Hunting</div>
+            <div class="subline" id="statusLine">Level 1 | XP 0</div>
+          </div>
+
+          <div class="right">
+            <div class="pill" id="pointsPill">Points: 0</div>
+            <button class="btn btnPrimary" id="confirmBtn" type="button" disabled>Confirm</button>
+            <button class="btn" id="closeBtn" type="button" data-action="close">Close</button>
+          </div>
+        </div>
+
+        <div class="tabs" id="tabsBar">
+          <button class="tab active" id="talentsTab" type="button">Talents</button>
+          <button class="tab" id="adminTab" type="button" hidden>Admin</button>
+        </div>
+
+        <div class="content">
+          <section id="talentsView" class="viewSection">
+            <div class="treeWrap">
+              <div class="sectionBar" aria-hidden="true">
+                <div class="sectionTag">Tracking</div>
+                <div class="sectionTag">Harvest</div>
+              </div>
+              <div id="nodes" class="nodes" aria-label="Talent Tree">
+                <svg id="lines" class="lines" aria-hidden="true"></svg>
+              </div>
+            </div>
+
+            <div class="hint">
+              <div><span class="kbd">ESC</span> close</div>
+              <div>Click talents, then confirm your unlocked upgrades</div>
+            </div>
+          </section>
+
+          <section id="adminPanel" class="adminPanel hidden viewSection" aria-label="Admin Panel">
+            <div class="adminHeader">
+              <div>
+                <div class="adminTitle">Admin Control</div>
+                <div class="adminSub" id="adminSummary">Manage hunting progression and zone tools</div>
+              </div>
+              <button class="btn" id="adminCloseBtn" type="button">Back To Talents</button>
+            </div>
+
+            <div class="adminBody">
+              <div class="adminSection">
+                <div class="adminSectionTitle">Players</div>
+                <div id="adminPlayers" class="adminPlayers"></div>
+              </div>
+
+              <div class="adminSection">
+                <div class="adminSectionTitle">Player Actions</div>
+                <div id="adminTarget" class="adminTarget">No player selected</div>
+                <div class="adminInputs">
+                  <label class="adminField">
+                    <span>XP Amount</span>
+                    <input id="adminXpInput" type="number" min="0" step="1" value="100" />
+                  </label>
+                  <label class="adminField">
+                    <span>Level</span>
+                    <input id="adminLevelInput" type="number" min="1" step="1" value="1" />
+                  </label>
+                </div>
+                <div class="adminActions">
+                  <button class="btn" id="adminAddXpBtn" type="button">Add XP</button>
+                  <button class="btn" id="adminSetXpBtn" type="button">Set XP</button>
+                  <button class="btn" id="adminSetLevelBtn" type="button">Set Level</button>
+                  <button class="btn" id="adminResetTalentsBtn" type="button">Reset Talents</button>
+                  <button class="btn" id="adminGiveAllTalentsBtn" type="button">Give All Talents</button>
+                  <button class="btn" id="adminResetAllBtn" type="button">Reset Progress</button>
+                </div>
+              </div>
+
+              <div class="adminSection">
+                <div class="adminSectionTitle">Zone Tools</div>
+                <div class="adminActions">
+                  <button class="btn" id="adminSpawnAnimalsBtn" type="button">Spawn Animals</button>
+                  <button class="btn" id="adminClearAnimalsBtn" type="button">Clear Animals</button>
+                  <button class="btn" id="adminResetZoneBtn" type="button">Reset Zone</button>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
