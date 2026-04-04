@@ -1,3 +1,5 @@
+ox_inventory/data/items.lua
+
     ['skining_knife'] = {
         label = 'Skining Knife',
         weight = 200,
@@ -73,3 +75,28 @@
         weight = 300,
         stack = true,
     },
+
+['hunting_talent_reset'] = {
+    label = 'Hunting Talent Reset',
+    weight = 50,
+    stack = true,
+    close = true,
+    consume = 0,
+    client = {
+        image = 'hunting_talent_reset.png',
+        event = 'xrb-hunting-talentreset:client:useItem'
+    }
+},
+
+['hunting_xpboost'] = {
+    label = 'Hunting XP Boost',
+    weight = 100,
+    stack = true,
+    close = true,
+    consume = 0,
+    client = {
+        image = 'hunting_xpboost.png',
+        event = 'xrb-hunting-xpboost:client:useItem'
+    }
+},
+
