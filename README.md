@@ -16,7 +16,7 @@ Preview : https://youtu.be/O0O9BtxZ7fo?si=mPKYZbS5PxI2bpov
 
 Level System: Players earn XP through hunting activities (e.g. skinning animals, selling items, etc.). Each time a player levels up, they receive 1 Talent Point.
 
-Talent Tree:
+🔹 Talent Tree:
 
 Accessible via command: /hunting
 
@@ -34,7 +34,7 @@ Faster skinning time
 
 Selling price bonuses
 
-Hidden Admin Panel:
+🔹 Hidden Admin Panel:
 
 Only visible to users with admin permissions
 
